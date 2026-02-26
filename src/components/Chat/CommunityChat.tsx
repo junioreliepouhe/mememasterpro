@@ -178,7 +178,7 @@ export const CommunityChat: React.FC = () => {
                         <h3 className="font-black text-sm tracking-tight uppercase">Communauté <span className="text-electric-blue">Elite</span></h3>
                         <p className="text-[9px] text-green-500 flex items-center gap-1 font-bold uppercase tracking-widest">
                             <span className={`w-1.5 h-1.5 rounded-full animate-pulse shadow-[0_0_5px_#22c55e] ${connError ? 'bg-red-500' : 'bg-green-500'}`} />
-                            {connError ? 'Erreur Sync' : 'Live Network'}
+                            {connError ? 'Erreur Sync' : 'Réseau en Direct'}
                         </p>
                     </div>
                 </div>
