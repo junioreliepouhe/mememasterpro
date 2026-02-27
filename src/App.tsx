@@ -23,7 +23,7 @@ const NavIcon = ({ icon, label, active, onClick, danger = false }: any) => (
 
 function MainApp() {
     const { user, isGuest, guestName, loading, loginWithGoogle, loginAsGuest, logout } = useAuth();
-    const [activeTab, setActiveTab] = useState<'creator' | 'gallery'>('creator');
+    const [activeTab, setActiveTab] = useState<'creator' | 'gallery' | 'chat'>('creator');
     const [showChat, setShowChat] = useState(true);
     const [editingMeme, setEditingMeme] = useState<any>(null);
     const [selectedBackground, setSelectedBackground] = useState<string | null>(null);
@@ -119,10 +119,10 @@ function MainApp() {
                     </div>
                 </header>
 
-                <main className="flex-1 overflow-y-auto p-4 md:p-12 custom-scrollbar bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-electric-blue/5 via-black to-black">
-                    <div className="max-w-7xl mx-auto">
+                <main className="flex-1 overflow-y-auto p-4 pb-24 md:p-12 md:pb-12 custom-scrollbar bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-electric-blue/5 via-black to-black">
+                    <div className="max-w-7xl mx-auto h-full flex flex-col">
                         <AnimatePresence mode="wait">
-                            {activeTab === 'creator' ? (
+                            {activeTab === 'creator' && (
                                 <motion.div
                                     key="creator"
                                     initial={{ opacity: 0, x: -20 }}
@@ -136,7 +136,8 @@ function MainApp() {
                                         onBackgroundUsed={() => setSelectedBackground(null)}
                                     />
                                 </motion.div>
-                            ) : (
+                            )}
+                            {activeTab === 'gallery' && (
                                 <motion.div
                                     key="gallery"
                                     initial={{ opacity: 0, scale: 0.95 }}
@@ -146,9 +147,40 @@ function MainApp() {
                                     <MemeGallery onEdit={handleEditMeme} />
                                 </motion.div>
                             )}
+                            {activeTab === 'chat' && (
+                                <motion.div
+                                    key="chat"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 20 }}
+                                    className="flex-1 h-[calc(100vh-140px)] lg:hidden"
+                                >
+                                    <CommunityChat />
+                                </motion.div>
+                            )}
                         </AnimatePresence>
                     </div>
                 </main>
+            </div>
+
+            {/* Bottom Navigation for Mobile */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 bg-gray-950 border-t border-gray-900 flex justify-around items-center p-3 pb-safe z-50">
+                <button onClick={() => setActiveTab('creator')} className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'creator' ? 'text-electric-blue scale-110' : 'text-gray-500'}`}>
+                    <PlusSquare size={20} />
+                    <span className="text-[10px] uppercase font-bold">Créer</span>
+                </button>
+                <button onClick={() => setActiveTab('gallery')} className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'gallery' ? 'text-electric-blue scale-110' : 'text-gray-500'}`}>
+                    <LayoutGrid size={20} />
+                    <span className="text-[10px] uppercase font-bold">Galerie</span>
+                </button>
+                <button onClick={() => setActiveTab('chat')} className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'chat' ? 'text-electric-blue scale-110' : 'text-gray-500'}`}>
+                    <MessageSquare size={20} />
+                    <span className="text-[10px] uppercase font-bold">Chat</span>
+                </button>
+                <button onClick={logout} className="flex flex-col items-center gap-1 text-gray-500">
+                    <LogOut size={20} />
+                    <span className="text-[10px] uppercase font-bold">Quitter</span>
+                </button>
             </div>
 
             {/* Right Chat Panel */}
@@ -171,7 +203,7 @@ function MainApp() {
                 onClick={() => setShowChat(!showChat)}
                 title={showChat ? "Masquer le chat" : "Afficher le chat"}
                 aria-label={showChat ? "Masquer le chat" : "Afficher le chat"}
-                className={`fixed top-1/2 -translate-y-1/2 right-0 bg-gray-950 border border-gray-900 border-r-0 p-3 rounded-l-2xl transition-all z-50 hover:bg-gray-900 hover:border-electric-blue/40 group ${showChat ? 'mr-[448px]' : 'mr-0'}`}
+                className={`hidden lg:block fixed top-1/2 -translate-y-1/2 right-0 bg-gray-950 border border-gray-900 border-r-0 p-3 rounded-l-2xl transition-all z-50 hover:bg-gray-900 hover:border-electric-blue/40 group ${showChat ? 'mr-[448px]' : 'mr-0'}`}
             >
                 {showChat ? <ChevronRight size={20} className="text-electric-blue group-hover:scale-125 transition-transform" /> : <ChevronLeft size={20} className="text-electric-blue group-hover:scale-125 transition-transform" />}
             </button>
